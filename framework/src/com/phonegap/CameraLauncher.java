@@ -270,11 +270,11 @@ public class CameraLauncher extends Plugin {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     // Create an ExifHelper to save the exif data that is lost during compression
-                    ExifHelper exif = new ExifHelper();
-                    if (this.encodingType == JPEG) {
-                        exif.createInFile(DirectoryManager.getTempDirectoryPath(ctx) + "/Pic.jpg");
-                        exif.readExifData();
-                    }
+                    //ExifHelper exif = new ExifHelper();
+                    //if (this.encodingType == JPEG) {
+                        //exif.createInFile(DirectoryManager.getTempDirectoryPath(ctx) + "/Pic.jpg");
+                        //exif.readExifData();
+                    //}
 
                     // Read in bitmap of captured image
                     Bitmap bitmap;
@@ -320,10 +320,10 @@ public class CameraLauncher extends Plugin {
                         os.close();
                         
                         // Restore exif data to file
-                        if (this.encodingType == JPEG) {
-                            exif.createOutFile(FileUtils.getRealPathFromURI(uri, this.ctx));
-                            exif.writeExifData();
-                        }
+                        //if (this.encodingType == JPEG) {
+                            //exif.createOutFile(FileUtils.getRealPathFromURI(uri, this.ctx));
+                            //exif.writeExifData();
+                        //}
 
                         // Send Uri back to JavaScript for viewing image
                         this.success(new PluginResult(PluginResult.Status.OK, uri.toString()), this.callbackId);

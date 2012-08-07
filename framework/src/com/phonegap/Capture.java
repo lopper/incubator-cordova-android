@@ -228,9 +228,9 @@ public class Capture extends Plugin {
                 // To work around it I had to grab the code from CameraLauncher.java
                 try {
                     // Create an ExifHelper to save the exif data that is lost during compression
-                    ExifHelper exif = new ExifHelper();
-                    exif.createInFile(DirectoryManager.getTempDirectoryPath(ctx) + "/Capture.jpg");
-                    exif.readExifData();
+                    //ExifHelper exif = new ExifHelper();
+                    //exif.createInFile(DirectoryManager.getTempDirectoryPath(ctx) + "/Capture.jpg");
+                    //exif.readExifData();
                     
                     // Read in bitmap of captured image
                     Bitmap bitmap = android.provider.MediaStore.Images.Media.getBitmap(this.ctx.getContentResolver(), imageUri);
@@ -263,8 +263,8 @@ public class Capture extends Plugin {
                     System.gc();
                     
                     // Restore exif data to file
-                    exif.createOutFile(FileUtils.getRealPathFromURI(uri, this.ctx));
-                    exif.writeExifData();
+                    //exif.createOutFile(FileUtils.getRealPathFromURI(uri, this.ctx));
+                    //exif.writeExifData();
                     
                     // Add image to results
                     results.put(createMediaFile(uri));
