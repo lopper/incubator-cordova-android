@@ -1174,8 +1174,10 @@ public class DroidGap extends PhonegapActivity {
                 if (this.ctx.loadInWebView || url.startsWith("file://") || url.indexOf(this.ctx.baseUrl) == 0 || isUrlWhiteListed(url)) {
                     try {
                         // Init parameters to new DroidGap activity and propagate existing parameters
-                        HashMap<String, Object> params = new HashMap<String, Object>();
-                        this.ctx.showWebPage(url, true, false, params);
+                    	this.ctx.clearHistory();
+                    	this.ctx.loadUrl(url);
+                    	HashMap<String, Object> params = new HashMap<String, Object>();
+                        //this.ctx.showWebPage(url, true, false, params);
                     } catch (android.content.ActivityNotFoundException e) {
                         System.out.println("Error loading url into DroidGap - "+url+":"+ e.toString());
                     }
