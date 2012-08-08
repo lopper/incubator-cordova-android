@@ -41,22 +41,14 @@
          should be checked in in Version Control Systems. -->
     <property file="default.properties" />
     
+	<property file="ant.properties" />
     <!-- We need to setup the double quote. -->
     <property name="dblQuote">"</property>
 
     <!-- Custom Android task to deal with the project target, and import the proper rules.
          This requires ant 1.6.0 or above. -->
-    <path id="android.antlibs">
-        <pathelement path="${sdk.dir}/tools/lib/anttasks.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/sdklib.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/apkbuilder.jar" />
-        <pathelement path="${sdk.dir}/tools/lib/jarutils.jar" />
-    </path>
+	<import file="${sdk.dir}/tools/ant/build.xml" />
 
-    <taskdef name="setup"
-        classname="com.android.ant.SetupTask"
-        classpathref="android.antlibs" />
 
     <!-- Execute the Android Setup task that will setup some properties specific to the target,
          and import the build rules files.
@@ -72,7 +64,7 @@
          This will ensure that the properties are setup correctly but that your customized
          build steps are used.
     -->
-    <setup />
+
 
     <target name="check-javascript" depends="build-javascript">
         <delete dir="assets/lib"/>
@@ -133,7 +125,7 @@
     <!-- Build PhoneGap jar file that includes all native code, and PhoneGap JS file
          that includes all JavaScript code.
     -->
-    <target name="jar" depends="build-javascript, compile">
+    <target name="jar" depends="build-javascript, -compile">
       <jar jarfile="phonegap-${version}.jar" basedir="bin/classes" excludes="com/phonegap/R.class,com/phonegap/R$*.class"/>
     </target>
 
