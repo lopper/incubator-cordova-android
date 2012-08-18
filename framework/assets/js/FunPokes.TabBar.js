@@ -17,7 +17,7 @@ var FunPokes = FunPokes || {};
 FunPokes.TabBar = function() { };
 
 /** @define {string} Plugin's full name. */
-FunPokes.TabBar.FULL_NAME = "com.funpokesinc.tabbar";
+FunPokes.TabBar.FULL_NAME = "FPTabBar";
 
 /**
  * Enum for default system items.
