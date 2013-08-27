@@ -258,6 +258,12 @@ public class DroidGap extends PhonegapActivity {
         String databasePath = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath(); 
         settings.setDatabasePath(databasePath);
 
+        //We don't save any form data in the application
+        settings.setSaveFormData(false);
+        settings.setSavePassword(false);
+        
+        settings.setAppCacheMaxSize(5 * 1048576);
+
         // Enable DOM storage
         WebViewReflect.setDomStorage(settings);
         
@@ -1171,6 +1177,8 @@ public class DroidGap extends PhonegapActivity {
 
                 // If our app or file:, then load into a new phonegap webview container by starting a new instance of our activity.
                 // Our app continues to run.  When BACK is pressed, our app is redisplayed.
+            	return false;
+            	/*
                 if (this.ctx.loadInWebView || url.startsWith("file://") || url.indexOf(this.ctx.baseUrl) == 0 || isUrlWhiteListed(url)) {
                     try {
                         // Init parameters to new DroidGap activity and propagate existing parameters
@@ -1193,6 +1201,7 @@ public class DroidGap extends PhonegapActivity {
                         System.out.println("Error loading url "+url+":"+ e.toString());
                     }
                 }
+                */
             }
             return true;
         }
