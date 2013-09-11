@@ -243,7 +243,7 @@ public class DroidGap extends PhonegapActivity {
         this.appView.setWebChromeClient(new GapClient(DroidGap.this));
         this.setWebViewClient(this.appView, new GapViewClient(this));
 
-        this.appView.setInitialScale(100);
+        this.appView.setInitialScale(0);
         this.appView.setVerticalScrollBarEnabled(false);
         this.appView.requestFocusFromTouch();
 
@@ -263,7 +263,10 @@ public class DroidGap extends PhonegapActivity {
         
         // Enable built-in geolocation
         WebViewReflect.setGeolocationEnabled(settings, true);
-
+        settings.setAppCacheMaxSize(5 * 1048576);
+        String pathToCache = getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+        settings.setAppCachePath(pathToCache);
+        settings.setAppCacheEnabled(true);
         // Create callback server and plugin manager
         this.callbackServer = new CallbackServer();
         this.pluginManager = new PluginManager(this.appView, this);        
@@ -357,10 +360,41 @@ public class DroidGap extends PhonegapActivity {
                 this.baseUrl = this.url + "/";
             }
         }
-        System.out.println("url="+url+" baseUrl="+baseUrl);
 
-        // Load URL on UI thread
+        
+        System.out.println("url="+url+" baseUrl="+baseUrl);
         final DroidGap me = this;
+        final int currentLoadUrlTimeout = me.loadUrlTimeout;
+        final Runnable loadError = new Runnable() {
+            public void run() {
+
+            	if(me.appView != null)
+            	{
+            		me.appView.stopLoading();
+            		me.webViewClient.onReceivedError(me.appView, -6, "The connection to the server was unsuccessful.", url);
+            	}
+            }
+        };
+        
+        final Runnable timeoutCheck = new Runnable() {
+            public void run() {
+                try {
+                    synchronized (this) {
+                        wait(loadUrlTimeoutValue);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                // If timeout, then stop loading and handle error
+                if (me.loadUrlTimeout == currentLoadUrlTimeout) {
+                    me.runOnUiThread(loadError);
+                }
+            }
+        };
+        
+        // Load URL on UI thread
+        
         this.runOnUiThread(new Runnable() {
             public void run() {
 
@@ -398,25 +432,7 @@ public class DroidGap extends PhonegapActivity {
                 }
 
                 // Create a timeout timer for loadUrl
-                final int currentLoadUrlTimeout = me.loadUrlTimeout;
-                Runnable runnable = new Runnable() {
-                    public void run() {
-                        try {
-                            synchronized(this) {
-                                wait(me.loadUrlTimeoutValue);
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        // If timeout, then stop loading and handle error
-                        if (me.loadUrlTimeout == currentLoadUrlTimeout) {
-                            me.appView.stopLoading();
-                            me.webViewClient.onReceivedError(me.appView, -6, "The connection to the server was unsuccessful.", url);
-                        }
-                    }
-                };
-                Thread thread = new Thread(runnable);
+                Thread thread = new Thread(timeoutCheck);
                 thread.start();
                 me.appView.loadUrl(url);
             }
