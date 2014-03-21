@@ -1294,7 +1294,7 @@ public class DroidGap extends PhonegapActivity {
                 if (this.ctx.callbackServer != null) {
                     this.ctx.callbackServer.destroy();
                 }
-                this.ctx.finish();
+                //this.ctx.finish();
             }
         }
         
@@ -1500,7 +1500,7 @@ public class DroidGap extends PhonegapActivity {
          // If not, then display error dialog
          else {
              me.appView.loadUrl("about:blank");
-             me.displayError("Application Error", description + " ("+failingUrl+")", "OK", true);
+             me.displayError("Application Error", description , "OK", true);
          }
      }
 
