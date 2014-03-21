@@ -438,7 +438,30 @@ public class DroidGap extends PhonegapActivity {
                 }
 
                 // Create a timeout timer for loadUrl
-                Thread thread = new Thread(timeoutCheck);
+                final int currentLoadUrlTimeout = me.loadUrlTimeout;
+                Runnable runnable = new Runnable() {
+                    public void run() {
+                        try {
+                            synchronized(this) {
+                                wait(me.loadUrlTimeoutValue);
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        // If timeout, then stop loading and handle error
+                        if (me.loadUrlTimeout == currentLoadUrlTimeout) {
+                        	me.runOnUiThread(new Runnable() {
+                        		public void run() {
+                        			  me.appView.stopLoading();
+                                      me.webViewClient.onReceivedError(me.appView, -6, "The connection to the server was unsuccessful.", url);
+                        		}
+                        	});
+                          
+                        }
+                    }
+                };
+                Thread thread = new Thread(runnable);
                 thread.start();
                 me.appView.loadUrl(url);
             }
